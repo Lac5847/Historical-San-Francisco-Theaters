@@ -27,8 +27,9 @@ map.on('load', function () {
   });
 
   map.on('click', 'points-layer', (e) => {
-    const coordinates = e.features[0].geometry.coordinates.slice();
-    const properties = e.features[0].properties;
+        // Copy coordinates array
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const properties = e.features[0].properties;
 
     const popupContent = `
             <div>
@@ -44,7 +45,26 @@ map.on('load', function () {
 
     
     
-        `;//source: Historic Sites and points of Interest in San Francisco. https://noehill.com/sf/landmarks/default.aspx
+        `;
+
+         new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(popupContent)
+            .addTo(map);
+  });
+
+      // Change cursor to pointer when hovering over points
+    map.on('mouseenter', 'points-layer', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change cursor back when leaving points
+    map.on('mouseleave', 'points-layer', () => {
+        map.getCanvas().style.cursor = '';
+    });
+
+});
+//source: Historic Sites and points of Interest in San Francisco. https://noehill.com/sf/landmarks/default.aspx
     // example code for different point colors.
 //const marker = new mapboxgl.Marker()
     //.setLngLat([30.5, 50.5])
@@ -60,16 +80,3 @@ map.on('load', function () {
    // draggable: true
 //}).setLngLat([30.5, 50.5])
     //.addTo(map);
-  });
-
-      // Change cursor to pointer when hovering over points
-    map.on('mouseenter', 'points-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-
-    // Change cursor back when leaving points
-    map.on('mouseleave', 'points-layer', () => {
-        map.getCanvas().style.cursor = '';
-    });
-
-});
